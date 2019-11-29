@@ -27,7 +27,8 @@ The Arduino runs rosserial. rosserial is a ROS package that generates CPP files 
 If for some reason ```roslib``` isn't a part of the Arduino project already or it needs to be regenerated, you can add it by running the following command from the root directory of the repository. 
 
 ```bash
-rosrun rosserial_arduino make_libraries.py .
+rm -rf Arduino/lib/ros_lib
+rosrun rosserial_arduino make_libraries.py Arduino/lib
 ```
 
 #### Connecting the Arduino to the Raspberry Pi
@@ -39,7 +40,7 @@ The other problem is connecting the wires to the Pi. As you'll read in the next 
 Once the Arduino is connected to the Pi, you start another ROS program on the Pi to connect the Arduino's node to the rest of the ROS system. You'll need to know the serial port of the Arduino, it should be something like ```/dev/ttyUSB0```, ```/dev/ttyACM0```, ```/dev/ttyAMA0```, etc.
 
 ```bash
-rosrun rosserial ... TODO
+rosrun rosserial_python serial_node.py /dev/ttyACM0
 ```
 
 ### Configuring the Raspberry Pi
@@ -72,13 +73,13 @@ Assuming you're following the order of this README, you already have ROS install
 We've included a simple subscriber in the Arduino code at ```/toggle_led``` that takes an ```std_msgs/Empty``` and toggles the built-in LED when some other node publishes on ```/toggle_led```. First, make sure the Arduino program is connected to the ROS system:
 
 ```bash
-rosrun rosserial ... TODO
+rosrun rosserial_python serial_node.py /dev/ttyACM0
 ```
 
 Now, publish to the ```/toggle_led``` topic from the command line on the Raspberry Pi.
 
 ```bash
-rostopic publish /toggle_led ... TODO
+rostopic pub /toggle_led std_msgs/Empty
 ```
 
 If everything is connected properly, you should see the LED built-in to the Arduino toggle on/off when you run the previous command.
