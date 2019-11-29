@@ -27,7 +27,7 @@ The Arduino runs rosserial. rosserial is a ROS package that generates CPP files 
 If for some reason ```roslib``` isn't a part of the Arduino project already or it needs to be regenerated, you can add it by running the following command from the root directory of the repository. 
 
 ```bash
-rosrun rosserial_arduino make_package.py Arduino/lib
+rosrun rosserial_arduino make_libraries.py .
 ```
 
 #### Connecting the Arduino to the Raspberry Pi
@@ -40,7 +40,6 @@ Once the Arduino is connected to the Pi, you start another ROS program on the Pi
 
 ```bash
 rosrun rosserial ... TODO
-
 ```
 
 ### Configuring the Raspberry Pi
