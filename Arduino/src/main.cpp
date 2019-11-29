@@ -9,10 +9,13 @@
 #include <Motor.h>
 #include <MotorEncoder.h>
 
+#define ROBOT_D		(25.4)	// Distance between wheels in cm
+#define ROBOT_R		(6.2)	// Radius of the wheel in cm
+
 ros::NodeHandle  nh;
 
-Motor leftMotor(GPIO_LEFT_MOTOR_PWM, GPIO_LEFT_MOTOR_DIR, GPIO_LEFT_MOTOR_ENC_A, GPIO_LEFT_MOTOR_ENC_B);
-Motor rightMotor(GPIO_RIGHT_MOTOR_PWM, GPIO_RIGHT_MOTOR_DIR, GPIO_RIGHT_MOTOR_ENC_A, GPIO_RIGHT_MOTOR_ENC_B);
+Motor leftMotor(GPIO_LEFT_MOTOR_PWM, GPIO_LEFT_MOTOR_DIR_A, GPIO_LEFT_MOTOR_DIR_B, GPIO_LEFT_MOTOR_ENC_A, GPIO_LEFT_MOTOR_ENC_B);
+Motor rightMotor(GPIO_RIGHT_MOTOR_PWM, GPIO_RIGHT_MOTOR_DIR_A, GPIO_LEFT_MOTOR_DIR_B, GPIO_RIGHT_MOTOR_ENC_A, GPIO_RIGHT_MOTOR_ENC_B);
 
 
 void toggle_callback( const std_msgs::Empty& toggle_msg){
@@ -22,7 +25,26 @@ ros::Subscriber<std_msgs::Empty> toggle_sub("toggle_led", toggle_callback);
 
 
 void cmd_vel_callback( const geometry_msgs::Twist& cmd_vel) {
+	float left_speed = ((2 * cmd_vel.linear.x) - (cmd_vel.angular.z * ROBOT_D)) / (2 * ROBOT_R);
+	float right_speed = ((2 * cmd_vel.linear.x) + (cmd_vel.angular.z * ROBOT_D)) / (2 * ROBOT_R);
+	
+	float scale = max(left_speed, right_speed);
+	left_speed /= scale;
+	right_speed /= scale;
 
+	if (left_speed > 0) {
+		leftMotor.setDirection(FORWARD);
+	} else {
+		leftMotor.setDirection(REVERSE);
+	}
+	leftMotor.setPower(fabs(left_speed));
+
+	if (right_speed > 0) {
+		rightMotor.setDirection(FORWARD);
+	} else {
+		rightMotor.setDirection(REVERSE);
+	}
+	rightMotor.setPower(fabs(right_speed));
 }
 ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_vel", cmd_vel_callback);
 

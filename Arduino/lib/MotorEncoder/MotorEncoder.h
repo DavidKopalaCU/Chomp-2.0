@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-#define PULSES_PER_REVOLUTION   (723.24)
+#define PULSES_PER_REVOLUTION   (180.81)
 
 class MotorEncoder
 {
