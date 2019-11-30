@@ -1,6 +1,6 @@
-/* Designed for the TB6612FNG chip. We're using a the TB6612FNG breakout from Sparkfun
- * (https://www.sparkfun.com/products/14451), and is also available from Pololu. We are also
- * "paralleling" the two channels of the chip so that we have a hiher current limit
+/* Designed for the TB6612FNG chip. We're using the TB6612FNG breakout from Sparkfun
+ * (https://www.sparkfun.com/products/14451), which is also available from Pololu. We are also
+ * "paralleling" the two channels of the chip so that we have a higher current limit
  * 
  * More information about how the chip functions is available online, like the Sparkfun
  * hookup guide: https://learn.sparkfun.com/tutorials/tb6612fng-hookup-guide?_ga=2.195405868.1664816146.1575054800-1624815254.1571192113
