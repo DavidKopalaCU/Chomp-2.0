@@ -1,0 +1,7 @@
+Chomp 2.0 Installer
+-------------------
+Chomp 2.0 is an autonomous Combat Robot inspired by Chomp,
+a robot appearing on the 2016 and 2018 seasons of Battlebots.
+This installer is intended to be run on a Raspberry Pi running
+Ubuntu 18.10.
+
