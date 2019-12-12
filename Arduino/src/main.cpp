@@ -47,7 +47,7 @@ void cmd_vel_callback( const geometry_msgs::Twist& cmd_vel) {
 	}
 	rightMotor.setPower(fabs(right_power) * 1);
 }
-ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_vel", cmd_vel_callback);
+ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_vel_comp", cmd_vel_callback);
 
 
 void arm_angle_callback(const std_msgs::Float32& arm_angle) {
