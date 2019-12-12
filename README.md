@@ -86,5 +86,9 @@ If everything is connected properly, you should see the LED built-in to the Ardu
 
 #### Running Our ROS Program
 
-Once we start writing ROS nodes/programs, we'll include
+Once we start writing ROS nodes/programs, we'll include details about how to use them here
+
+## ROS Topics
+
+Below is some very basic documentation/info on what topics are available
 
