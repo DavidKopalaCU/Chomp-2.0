@@ -19,7 +19,7 @@ public:
     uint8_t enc_a_pin;
     uint8_t enc_b_pin;
 
-    volatile int64_t pulse_count;
+    volatile int64_t pulse_count = 0;
     float getAngle();
 };
 
