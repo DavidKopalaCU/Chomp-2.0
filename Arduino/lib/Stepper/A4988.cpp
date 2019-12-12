@@ -7,6 +7,8 @@ A4988::A4988(uint8_t _dir_pin, uint8_t _step_pin)
     dir_pin = _dir_pin;
     step_pin = _step_pin;
 
+    step_count = 0;
+
     pinMode(dir_pin, OUTPUT);
     pinMode(step_pin, OUTPUT);
 }
@@ -48,7 +50,7 @@ void A4988::step(uint64_t steps, stepper_direction direction)
         step_count -= steps;
     }
 
-    for (uint64_t i; i < steps; i++) {
+    for (uint64_t i = 0; i < steps; i++) {
         digitalWrite(step_pin, HIGH);
         delay(1);
         digitalWrite(step_pin, LOW);
