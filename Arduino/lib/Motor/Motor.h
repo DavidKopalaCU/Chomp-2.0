@@ -38,7 +38,7 @@ private:
 
 public:
     Motor(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin);
-    Motor(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin, uint8_t enc_a, uint8_t enc_b);
+    Motor(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin, uint8_t enc_a, uint8_t enc_b, bool flip_enc = false);
     ~Motor();
 
     void setDirection(motor_direction _dir);

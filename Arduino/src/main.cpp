@@ -15,7 +15,7 @@
 ros::NodeHandle nh;
 
 Motor leftMotor(GPIO_LEFT_MOTOR_PWM, GPIO_LEFT_MOTOR_DIR_A, GPIO_LEFT_MOTOR_DIR_B, GPIO_LEFT_MOTOR_ENC_A, GPIO_LEFT_MOTOR_ENC_B);
-Motor rightMotor(GPIO_RIGHT_MOTOR_PWM, GPIO_RIGHT_MOTOR_DIR_A, GPIO_RIGHT_MOTOR_DIR_B, GPIO_RIGHT_MOTOR_ENC_A, GPIO_RIGHT_MOTOR_ENC_B);
+Motor rightMotor(GPIO_RIGHT_MOTOR_PWM, GPIO_RIGHT_MOTOR_DIR_B, GPIO_RIGHT_MOTOR_DIR_A, GPIO_RIGHT_MOTOR_ENC_A, GPIO_RIGHT_MOTOR_ENC_B);
 
 A4988 stepper(GPIO_STEPPER_DIR, GPIO_STEPPER_STEP);
 
@@ -70,13 +70,16 @@ void setup()
 	nh.advertise(motor_angles_publisher);
 }
 
+unsigned long last_angle_pub = 0;
 void loop()
 {
-	//nh.loginfo("ARDUINO LOOP");		
-	//
-	motor_angles.x = rightMotor.getEncoder()->getAngle();
-	motor_angles.y = leftMotor.getEncoder()->getAngle();
-	motor_angles_publisher.publish(&motor_angles);
+	// Publish motor angles every 0.5s
+	if (micros() - last_angle_pub >= 500000) {
+		motor_angles.x = - rightMotor.getEncoder()->getAngle();
+		motor_angles.y = leftMotor.getEncoder()->getAngle();
+		motor_angles_publisher.publish(&motor_angles);
+		last_angle_pub = micros();
+	}
 
 	nh.spinOnce();
 }

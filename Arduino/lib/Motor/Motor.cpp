@@ -7,11 +7,11 @@ Motor::Motor(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin)
     encoder = nullptr;
 }
 
-Motor::Motor(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin, uint8_t enc_a, uint8_t enc_b)
+Motor::Motor(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin, uint8_t enc_a, uint8_t enc_b, bool flip_enc)
 {
     common_init(_pwm_pin, _dir_a_pin, _dir_b_pin);
 
-    encoder = new MotorEncoder(enc_a, enc_b);
+    encoder = new MotorEncoder(enc_a, enc_b, flip_enc);
 }
 
 void Motor::common_init(uint8_t _pwm_pin, uint8_t _dir_a_pin, uint8_t _dir_b_pin)
