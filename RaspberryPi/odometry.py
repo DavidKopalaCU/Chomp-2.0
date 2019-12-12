@@ -1,4 +1,4 @@
-import model
+from model import ROBOT_D, ROBOT_R
 
 import rospy
 from geometry_msgs.msg import Pose2D

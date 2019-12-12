@@ -45,7 +45,7 @@ void cmd_vel_callback( const geometry_msgs::Twist& cmd_vel) {
 	} else {
 		rightMotor.setDirection(REVERSE);
 	}
-	rightMotor.setPower(fabs(right_power));
+	rightMotor.setPower(fabs(right_power) * 1);
 }
 ros::Subscriber<geometry_msgs::Twist> cmd_vel_sub("cmd_vel", cmd_vel_callback);
 
