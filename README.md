@@ -90,5 +90,67 @@ Once we start writing ROS nodes/programs, we'll include details about how to use
 
 ## ROS Topics
 
-Below is some very basic documentation/info on what topics are available
+Below is some very basic documentation/info on what topics are available and what they do
 
+### `/toggle_led`
+
+| Name | Message Type | Units | Publishing Node |
+|---|---|---|---|
+| `/toggle_led` | `Empty` | None | User |
+
+Toggles the Arduino's onboard LED attached to GPIO Pin 13.
+
+### `/cmd_vel`
+
+| Name | Message Type | Units | Publishing Node |
+|---|---|---|---|
+| `/cmd_vel` | `Twist` | m/s | ??? (User) |
+
+Known Subscribers:
+ - `cmd_vel_compensator`
+
+Takes a `Twist` that describes the velocity of the 6 degrees of freedom of the robot's frame of reference. This is what drives the motors at the highest level, although in practice the message is sent through a compensator and inverse kinematics layers.
+
+### `/cmd_vel_comp`
+| Name | Message Type | Units | Publishing Node |
+|---|---|---|---|
+| `/cmd_vel_comp` | `Twist` | m/s | cmd_vel_compensator |
+
+Known Subscribers
+ - Arduino Serial
+
+Uses a simple Proportional-Integral (PI) Feedback Controller to minimze error introduced by the motors. Reference signal is the `cmd_vel` `Twist` that the node subscribes to, and the feedback is based off of the measured `motor_angles` topic. The difference between these values is the error signal, which is multiplied by a Proportional Gain, and added to an integrated error, which is then sent to the motors, AKA the plant.
+
+### `/motor_angles`
+
+| Name | Message Type | Units | Publishing Node |
+|---|---|---|---|
+| `/motor_angles` | `Vector3` | radians | rosserial |
+
+Known Subscribers:
+ - Odometry
+ - cmd_vel_compensator
+
+Takes the signal from the encoders attached to each motor and calculates how far each motor has rotated since being turned on.
+
+### `/odometry`
+
+| Name | Message Type | Units | Publishing Node |
+|---|---|---|---|
+| `/odometry` | `Pose2D` | m - radians | odometry |
+
+Known Subscribers:
+ - None
+
+Publishes the robot's location in the world frame whenever new data is available from `/motor_angles`
+
+### `/arm_angle`
+
+| Name | Message Type | Units | Publishing Node |
+|---|---|---|---|
+| `/arm_angle` | `Float` | degrees | rosserial |
+
+Known Subscribers:
+ - None
+
+Sets the position of the weapon arm. Offset from the initial location of the arm.

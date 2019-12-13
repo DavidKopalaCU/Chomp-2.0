@@ -9,6 +9,9 @@ from model import ROBOT_D, ROBOT_R
 import rospy
 from geometry_msgs.msg import Pose2D, Vector3, Twist
 
+K_P = 1     # Proportional Gain Constant
+K_I = 0.1   # Integral Gain Constant
+
 cmd_vel_comp_pub = None
 
 motor_angles_prev = Vector3()
@@ -16,11 +19,16 @@ time_prev = 0.
 
 target_cmd_vel = None
 
+right_err_int = 0
+left_err_int = 0
+
 def motor_angles_cb(motor_angles):
     global cmd_vel_comp_pub
     global motor_angles_prev
     global time_prev
     global target_cmd_vel
+    global right_err_int
+    global left_err_int
 
     if target_cmd_vel == None:
         return
@@ -40,8 +48,11 @@ def motor_angles_cb(motor_angles):
     right_err = target_motor_right_speed - real_motor_right_speed
     left_err = target_motor_left_speed - real_motor_left_speed
 
-    comp_right = 1 * right_err
-    comp_left = 1 * left_err
+    right_err_int += right_err
+    left_err_int += left_err
+
+    comp_right = (K_P * right_err) + (K_I * right_err_int)
+    comp_left = (K_P * left_err) + (K_I * left_err_int)
 
     comp_cmd_vel = Twist()
     comp_cmd_vel.linear.x = (comp_left * ROBOT_R + comp_right * ROBOT_D) / 2

@@ -1,0 +1,14 @@
+[Unit]
+Description=Chomp 2.0 Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ubuntu
+ExecStart=/usr/bin/env bash /home/ubuntu/startup.sh
+
+[Install]
+WantedBy=multi-user.target
