@@ -19,6 +19,7 @@ class ImageListener:
     def __init__(self, topic):
 	self.centroid = None
         self.topic = topic
+	self.found = False
         self.bridge = CvBridge()
 	self.odom = Pose2D()
         self.sub = rospy.Subscriber(topic, msg_Image, self.imageDepthCallback)
@@ -37,8 +38,8 @@ class ImageListener:
             cv_image = self.bridge.imgmsg_to_cv2(data, data.encoding)
 
 	    hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV) # convert to HSV
-    	    lower_red_1 = np.array([30, 150, 50])
-   	    upper_red_1 = np.array([255, 255,180])
+    	    lower_red_1 = np.array([30, 115, 30])
+   	    upper_red_1 = np.array([255, 255,200])
     	    #lower_red_2 = np.array([20,100,100])
    	    #upper_red_2 = np.array([30,255,255])
     	    mask_1 = cv2.inRange(hsv, lower_red_1, upper_red_1 )
@@ -51,8 +52,10 @@ class ImageListener:
 	    height,width,channels = cv_image.shape
 	    # print(height,width,channels)
 	    self.centroid = (float(cX) / width, float(cY) / height)
-
-	    cv2.circle(mask_1, (cX,cY), 10, 255, -1) 
+	    
+	    perc_filled = M['m00'] / (height*width * 1.0)
+            
+	    cv2.circle(mask_1, (cX,cY), 10, 0, -1) 
         except CvBridgeError as e:
             print(e)
 
@@ -61,7 +64,7 @@ class ImageListener:
 	
 	#print(self.follow_corridor.curr_steering_angle)
 	# self.pub.publish(self.msg)
-	#cv2.imshow("mask_1", mask_1)y	#cv2.imshow("mask_2", mask_2)
+	#cv2.imshow("mask_1", mask_1)	#cv2.imshow("mask_2", mask_2)
         #cv2.waitKey(1)
 
 
@@ -88,20 +91,20 @@ class ImageListener:
 	# self.pub.publish(msg)
 	
 	# Angle of the target in frame
-	distance = cv_image[cy_scaled, cx_scaled] / 1000.0
-	angle = (self.centroid[0] - 0.5) * 86
-	dy = cos(radians(angle)) * distance
-	dx = sin(radians(angle)) * distance
+	distance = cv_image[cy_scaled, cx_scaled] / 1000.0	# meters
+	angle = (0.5 - self.centroid[0]) * 86
+	dy = -1*sin(radians(angle)) * distance
+	dx = cos(radians(angle)) * distance
 	target_position = Pose2D()
-	target_position.x = dx + self.odom.x - 0.1 # OFFSET FROM CENTER
-	target_position.y = dy + self.odom.y
-	# target_position.theta = angle # VERBOSE INFO ONLY
+	target_position.x = dx # + self.odom.x
+	target_position.y = dy # + self.odom.y # OFFSET FROM CENTER
+	target_position.theta = angle # VERBOSE INFO ONLY
 	self.pub_target.publish(target_position)
 
-	cv2.circle(cv_image, (cx_scaled,cy_scaled), 2, 255*255, -1)
+	# cv2.circle(cv_image, (cx_scaled,cy_scaled), 2, 255*255, -1)
 
-	cv2.imshow("Depth", cv_image)
-	cv2.waitKey(1)
+	# cv2.imshow("Depth", cv_image)
+	# cv2.waitKey(1)
 	
 	pass
 

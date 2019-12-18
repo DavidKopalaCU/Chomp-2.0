@@ -55,7 +55,7 @@ def motor_angles_cb(motor_angles):
     comp_left = (K_P * left_err) + (K_I * left_err_int)
 
     comp_cmd_vel = Twist()
-    comp_cmd_vel.linear.x = (comp_left * ROBOT_R + comp_right * ROBOT_D) / 2
+    comp_cmd_vel.linear.x = min((comp_left * ROBOT_R + comp_right * ROBOT_D) / 2, 1)
     comp_cmd_vel.angular.z = (comp_right * ROBOT_D - comp_left * ROBOT_R) / ROBOT_D
     cmd_vel_comp_pub.publish(comp_cmd_vel)
 
