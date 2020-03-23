@@ -16,6 +16,9 @@ function check_raspberry_pi() {
 
 function full_install() {
     echo "FULL INSTALL"
+
+    echo "Installing system dependencies"
+    # REALSENSE INSTALL
 }
 
 # Follows the instructions for installing ROS Melodic on Ubuntu

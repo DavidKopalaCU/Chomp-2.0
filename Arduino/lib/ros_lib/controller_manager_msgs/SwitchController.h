@@ -23,13 +23,19 @@ static const char SWITCHCONTROLLER[] = "controller_manager_msgs/SwitchController
       _stop_controllers_type * stop_controllers;
       typedef int32_t _strictness_type;
       _strictness_type strictness;
+      typedef bool _start_asap_type;
+      _start_asap_type start_asap;
+      typedef float _timeout_type;
+      _timeout_type timeout;
       enum { BEST_EFFORT = 1 };
       enum { STRICT = 2 };
 
     SwitchControllerRequest():
       start_controllers_length(0), start_controllers(NULL),
       stop_controllers_length(0), stop_controllers(NULL),
-      strictness(0)
+      strictness(0),
+      start_asap(0),
+      timeout(0)
     {
     }
 
@@ -70,6 +76,14 @@ static const char SWITCHCONTROLLER[] = "controller_manager_msgs/SwitchController
       *(outbuffer + offset + 2) = (u_strictness.base >> (8 * 2)) & 0xFF;
       *(outbuffer + offset + 3) = (u_strictness.base >> (8 * 3)) & 0xFF;
       offset += sizeof(this->strictness);
+      union {
+        bool real;
+        uint8_t base;
+      } u_start_asap;
+      u_start_asap.real = this->start_asap;
+      *(outbuffer + offset + 0) = (u_start_asap.base >> (8 * 0)) & 0xFF;
+      offset += sizeof(this->start_asap);
+      offset += serializeAvrFloat64(outbuffer + offset, this->timeout);
       return offset;
     }
 
@@ -127,11 +141,20 @@ static const char SWITCHCONTROLLER[] = "controller_manager_msgs/SwitchController
       u_strictness.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
       this->strictness = u_strictness.real;
       offset += sizeof(this->strictness);
+      union {
+        bool real;
+        uint8_t base;
+      } u_start_asap;
+      u_start_asap.base = 0;
+      u_start_asap.base |= ((uint8_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      this->start_asap = u_start_asap.real;
+      offset += sizeof(this->start_asap);
+      offset += deserializeAvrFloat64(inbuffer + offset, &(this->timeout));
      return offset;
     }
 
     const char * getType(){ return SWITCHCONTROLLER; };
-    const char * getMD5(){ return "434da54adc434a5af5743ed711fd6ba1"; };
+    const char * getMD5(){ return "36d99a977432b71d4bf16ce5847949d7"; };
 
   };
 
